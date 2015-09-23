@@ -1,0 +1,45 @@
+begin model
+begin parameters
+	kon 100
+	koff 10000
+	kprod 80
+	mu 1
+end parameters
+begin molecule types
+	a()
+	b()
+	o()
+	oaa()
+	obb()
+       trash()
+end molecule types
+begin seed species
+	a() 80
+	b() 0
+	o() 0
+	oaa() 1
+	obb() 0
+       $trash() 0
+end seed species
+begin observables
+	Molecules a a()
+	Molecules b b()
+	Molecules o o()
+	Molecules oaa oaa()
+	Molecules obb obb()
+end observables
+begin reaction rules
+	o() + a() + a() <-> oaa() kon koff
+	o() + b() + b() <-> obb() kon koff
+	o() -> o() + a() kprod
+	o() -> o() + b() kprod
+	oaa() -> oaa() + a() kprod
+	obb() -> obb() + b() kprod
+	a() -> trash() mu
+	b() -> trash() mu
+end reaction rules
+end model
+
+#ACTIONS
+generate_network({overwrite=>1});
+simulate_ssa({t_start=>0,t_end=>0.1,t_steps=>100});
